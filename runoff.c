@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
         for (int j = 0; j < candidate_count; j++)
         {
 	    printf("Rank %i: ", j + 1);
-	    char* name;
+	    char name[20];
 	    scanf("%s", name);
 
             // Record vote, unless it's invalid
