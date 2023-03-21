@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
 
 // Max voters and candidates
@@ -131,7 +132,14 @@ int main(int argc, char* argv[])
 // Record preference if vote is valid
 bool vote(int voter, int rank, char* name)
 {
-    // TODO
+	for (int i = 0; i < candidate_count; i++)
+	{
+		if (strcmp(candidates[i].name, name) == 0)
+		{
+			preferences[voter][i] = rank;
+			return true;
+		}
+	}
     return false;
 }
 
