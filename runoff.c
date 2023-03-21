@@ -87,6 +87,7 @@ int main(int argc, char* argv[])
         printf("\n");
     }
 
+
     // Keep holding runoffs until winner exists
     while (true)
     {
@@ -126,6 +127,7 @@ int main(int argc, char* argv[])
             candidates[i].votes = 0;
         }
     }
+
     return 0;
 }
 
@@ -150,9 +152,26 @@ void tabulate(void)
 	{
 		for (int j = 0; j < candidate_count; j++)
 		{
-			if (candidates[j].eliminated == false && preferences[i][j] == 0)
+			if (candidates[j].eliminated == false)
 			{
-				candidates[j].votes++;
+				if (preferences[i][j] == 0)
+				{
+					candidates[j].votes++;
+				}
+			}
+			else
+			{
+				// if candidate is eliminate then assign votes to second preference
+				if (preferences[i][j] == 0)
+				{
+					for (int k = 0; k < candidate_count; k++)
+					{
+						if (preferences[i][k] == 1)
+						{
+							candidates[k].votes++;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -164,9 +183,9 @@ bool print_winner(void)
 {
 	for (int i = 0; i < candidate_count; i++)
 	{
-		if (candidates[i].votes > candidate_count/2)
+		if (candidates[i].votes > voter_count/2)
 		{
-			printf("%s\n", candidates[i].name);
+			printf("Winner is %s with %i votes.\n", candidates[i].name, candidates[i].votes);
 			return true;
 		}
 	}
@@ -179,10 +198,14 @@ int find_min(void)
 	int min_votes = MAX_VOTERS;
 	for (int i = 0; i < candidate_count; i++)
 	{
-		if (candidates[i].eliminated == false && candidates[i].votes > min_votes)
+		if (candidates[i].eliminated == false)
 		{
-			min_votes = candidates[i].votes;
+			if (candidates[i].votes < min_votes)
+			{
+				min_votes = candidates[i].votes;
+			}
 		}
+
 	}
 	return min_votes;
 }
@@ -211,4 +234,24 @@ void eliminate(int min)
 		}
 	}
     return;
+}
+
+void printCandidates()
+{
+	for (int i = 0; i < candidate_count; i++)
+	{
+		printf("name: %s, votes: %i, eliminated: %d\n", candidates[i].name, candidates[i].votes, candidates[i].eliminated);
+	}
+}
+
+void printPreferences()
+{
+	for (int i = 0; i < voter_count; i++)
+	{
+		for (int j = 0; j < candidate_count; j++)
+		{
+			printf("%i ", preferences[i][j]);
+		}
+		printf("\n");
+	}
 }
